@@ -1,0 +1,73 @@
+<!--  -->
+<!--  -->
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:300,400,500,600,700&family=Playfair+Display:300,400,500,600,700&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Product — Niyantri</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>h1,h2,h3{font-family:'Playfair Display',serif}body,button,input,textarea{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}</style>
+</head>
+<body style="font-family: 'Inter', sans-serif;" class="bg-[#071021] text-[#e6e6e6]">
+  <header class="bg-[#08121a] sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="#" onclick="window.parent.handlePreviewNavigation(\'index.html\'); return false;" class="flex items-center text-[#D4AF37] font-bold">Niyantri</a>
+      <nav class="space-x-4 text-[#F7EED6]"><a href="#" onclick="window.parent.handlePreviewNavigation(\'index.html\'); return false;">Home</a><a href="#" onclick="window.parent.handlePreviewNavigation(\'products.html\'); return false;">Shop</a><a href="#" onclick="window.parent.handlePreviewNavigation(\'about.html\'); return false;">About</a><a href="#" onclick="window.parent.handlePreviewNavigation(\'contact.html\'); return false;">Contact</a><a href="#" onclick="window.parent.handlePreviewNavigation(\'cart.html\'); return false;">Cart</a></nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-12">
+    <div id="productWrap"></div>
+  </main>
+
+  <footer class="bg-[#06101a] mt-12 py-8 text-center text-sm text-[#9aa3ac]">© Niyantri — Demo store</footer>
+
+  <script src="./products.js"></script>
+  <script>
+    function getQueryVar(name){
+      const params = new URLSearchParams(location.search);
+      return params.get(name);
+    }
+    const id = parseInt(getQueryVar('id')) || PRODUCTS[0].id;
+    const p = PRODUCTS.find(x=>x.id===id) || PRODUCTS[0];
+
+    const wrap = document.getElementById('productWrap');
+    wrap.innerHTML = `
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <div>
+          <img src="${p.image}" alt="${p.name}" class="w-full h-[520px] object-cover rounded-lg shadow" />
+        </div>
+        <div>
+          <h1 class="text-3xl text-[#F7EED6]">${p.name}</h1>
+          <p class="text-sm text-[#cfcfcf] mt-2">${p.category}</p>
+          <div class="mt-4 text-2xl text-[#D4AF37]">$${p.price.toFixed(2)}</div>
+          <p class="mt-6 text-[#d9d9d9]">${p.description}</p>
+
+          <div class="mt-6 flex items-center gap-3">
+            <label class="text-sm">Qty</label>
+            <input id="qty" type="number" value="1" min="1" class="w-20 px-3 py-2 bg-[#0b1420] border border-[#1f2a36] rounded text-[#e6e6e6]" />
+          </div>
+
+          <div class="mt-6 flex gap-3">
+            <button id="addBtn" class="bg-[#D4AF37] text-[#08101a] px-4 py-2 rounded">Add to cart</button>
+            <a href="#" onclick="window.parent.handlePreviewNavigation(\'cart.html\'); return false;" class="px-4 py-2 border border-[#2a3944] rounded text-[#F7EED6]">View Cart</a>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('addBtn').addEventListener('click', ()=>{
+      const qty = Math.max(1, parseInt(document.getElementById('qty').value||1));
+      let cart = JSON.parse(localStorage.getItem('niyantri_cart')||'[]');
+      const found = cart.find(i=>i.id===p.id);
+      if(found) found.qty += qty; else cart.push({id:p.id, qty: qty});
+      localStorage.setItem('niyantri_cart', JSON.stringify(cart));
+      alert('Added to cart (demo)');
+    });
+  </script>
+</body>
+</html>
