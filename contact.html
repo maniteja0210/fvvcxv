@@ -1,0 +1,49 @@
+<!--  -->
+<!--  -->
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:300,400,500,600,700&family=Playfair+Display:300,400,500,600,700&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contact — Niyantri</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>h1,h2,h3{font-family:'Playfair Display',serif}body,button,input,textarea{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}</style>
+</head>
+<body style="font-family: 'Inter', sans-serif;" class="bg-[#071021] text-[#e6e6e6]">
+  <header class="bg-[#08121a] sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="#" onclick="window.parent.handlePreviewNavigation(\'index.html\'); return false;" class="flex items-center text-[#D4AF37] font-bold">Niyantri</a>
+      <nav class="space-x-4 text-[#F7EED6]"><a href="#" onclick="window.parent.handlePreviewNavigation(\'index.html\'); return false;">Home</a><a href="#" onclick="window.parent.handlePreviewNavigation(\'products.html\'); return false;">Shop</a><a href="#" onclick="window.parent.handlePreviewNavigation(\'about.html\'); return false;">About</a><a href="#" onclick="window.parent.handlePreviewNavigation(\'contact.html\'); return false;">Contact</a><a href="#" onclick="window.parent.handlePreviewNavigation(\'cart.html\'); return false;">Cart</a></nav>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-6 py-16">
+    <h1 class="text-3xl text-[#F7EED6]">Contact</h1>
+    <p class="mt-2 text-[#cfcfcf]">Have a question? Send us a message and we'll get back to you (demo).</p>
+
+    <form id="contactForm" class="mt-6 bg-[#071523] p-6 rounded-xl space-y-4">
+      <input name="name" placeholder="Full name" required class="w-full px-3 py-2 bg-[#0b1420] border border-[#1f2a36] rounded text-[#e6e6e6]" />
+      <input name="email" type="email" placeholder="Email" required class="w-full px-3 py-2 bg-[#0b1420] border border-[#1f2a36] rounded text-[#e6e6e6]" />
+      <input name="phone" placeholder="Phone" class="w-full px-3 py-2 bg-[#0b1420] border border-[#1f2a36] rounded text-[#e6e6e6]" />
+      <textarea name="message" placeholder="Message" rows="6" class="w-full px-3 py-2 bg-[#0b1420] border border-[#1f2a36] rounded text-[#e6e6e6]"></textarea>
+      <div class="flex items-center justify-between">
+        <div class="text-sm text-[#cfcfcf]">Or email: hello@niyantri.example (demo)</div>
+        <button class="bg-[#D4AF37] text-[#08101a] px-4 py-2 rounded">Send Message</button>
+      </div>
+    </form>
+  </main>
+
+  <footer class="bg-[#06101a] mt-12 py-8 text-center text-sm text-[#9aa3ac]">© Niyantri — Demo store</footer>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      alert('Message sent (demo).');
+      e.target.reset();
+    });
+  </script>
+</body>
+</html>
