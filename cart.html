@@ -1,0 +1,96 @@
+<!--  -->
+<!--  -->
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:300,400,500,600,700&family=Playfair+Display:300,400,500,600,700&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cart — Niyantri</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>h1,h2,h3{font-family:'Playfair Display',serif}body,button,input,textarea{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}</style>
+</head>
+<body style="font-family: 'Inter', sans-serif;" class="bg-[#071021] text-[#e6e6e6]">
+  <header class="bg-[#08121a] sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="#" onclick="window.parent.handlePreviewNavigation(\'index.html\'); return false;" class="flex items-center text-[#D4AF37] font-bold">Niyantri</a>
+      <nav class="space-x-4 text-[#F7EED6]"><a href="#" onclick="window.parent.handlePreviewNavigation(\'index.html\'); return false;">Home</a><a href="#" onclick="window.parent.handlePreviewNavigation(\'products.html\'); return false;">Shop</a><a href="#" onclick="window.parent.handlePreviewNavigation(\'about.html\'); return false;">About</a><a href="#" onclick="window.parent.handlePreviewNavigation(\'contact.html\'); return false;">Contact</a><a href="#" onclick="window.parent.handlePreviewNavigation(\'cart.html\'); return false;">Cart</a></nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-12">
+    <h1 class="text-3xl text-[#F7EED6]">Your Cart</h1>
+    <div class="mt-6 bg-[#071523] rounded-xl p-6">
+      <div id="cartList" class="space-y-4"></div>
+
+      <div class="mt-6 flex justify-between items-center">
+        <div class="text-sm text-[#cfcfcf]">Shipping will be calculated at checkout.</div>
+        <div>
+          <a href="#" onclick="window.parent.handlePreviewNavigation(\'products.html\'); return false;" class="text-[#F7EED6] mr-4">Continue shopping</a>
+          <a id="checkoutBtn" href="#" onclick="window.parent.handlePreviewNavigation(\'checkout.html\'); return false;" class="bg-[#D4AF37] text-[#08101a] px-4 py-2 rounded">Checkout</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-[#06101a] mt-12 py-8 text-center text-sm text-[#9aa3ac]">© Niyantri — Demo store</footer>
+
+  <script src="./products.js"></script>
+  <script>
+    function refreshCart(){
+      const list = document.getElementById('cartList');
+      let cart = JSON.parse(localStorage.getItem('niyantri_cart')||'[]');
+      if(cart.length===0){ list.innerHTML='<div class="text-center text-[#cfcfcf] py-8">Your cart is empty.</div>'; return; }
+      list.innerHTML='';
+      let total = 0;
+      cart.forEach(item=>{
+        const p = PRODUCTS.find(x=>x.id===item.id);
+        const row = document.createElement('div');
+        row.className='flex items-center gap-4';
+        row.innerHTML = `
+          <img src="${p.image}" class="w-24 h-24 object-cover rounded" />
+          <div class="flex-1">
+            <div class="text-[#F7EED6]">${p.name}</div>
+            <div class="text-sm text-[#cfcfcf]">$${p.price.toFixed(2)} • ${p.category}</div>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="number" min="1" value="${item.qty}" data-id="${p.id}" class="w-20 px-2 py-1 bg-[#0b1420] border border-[#1f2a36] rounded text-[#e6e6e6] qtyInput" />
+            <div class="text-[#D4AF37]">$${(p.price*item.qty).toFixed(2)}</div>
+            <button class="text-sm text-red-400 ml-4 removeBtn" data-id="${p.id}">Remove</button>
+          </div>
+        `;
+        list.appendChild(row);
+        total += p.price*item.qty;
+      });
+      const summary = document.createElement('div');
+      summary.className='mt-6 border-t border-[#0f1724] pt-4 flex justify-end items-center gap-6';
+      summary.innerHTML = `<div class="text-sm text-[#cfcfcf]">Subtotal</div><div class="text-xl text-[#D4AF37]">$${total.toFixed(2)}</div>`;
+      list.appendChild(summary);
+
+      // bind qty change
+      document.querySelectorAll('.qtyInput').forEach(inp=>{
+        inp.addEventListener('change', ()=>{
+          const id = parseInt(inp.getAttribute('data-id'));
+          const q = Math.max(1, parseInt(inp.value||1));
+          let cart = JSON.parse(localStorage.getItem('niyantri_cart')||'[]');
+          const item = cart.find(i=>i.id===id);
+          if(item){ item.qty = q; localStorage.setItem('niyantri_cart', JSON.stringify(cart)); refreshCart(); }
+        });
+      });
+      document.querySelectorAll('.removeBtn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const id = parseInt(btn.getAttribute('data-id'));
+          let cart = JSON.parse(localStorage.getItem('niyantri_cart')||'[]');
+          cart = cart.filter(i=>i.id!==id);
+          localStorage.setItem('niyantri_cart', JSON.stringify(cart));
+          refreshCart();
+        });
+      });
+    }
+
+    refreshCart();
+  </script>
+</body>
+</html>
