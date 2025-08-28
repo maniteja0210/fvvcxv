@@ -1,0 +1,100 @@
+<!--  -->
+<!--  -->
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:300,400,500,600,700&family=Playfair+Display:300,400,500,600,700&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Shop — Niyantri</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>h1,h2,h3{font-family:'Playfair Display',serif}body,button,input,textarea{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}</style>
+</head>
+<body style="font-family: 'Inter', sans-serif;" class="bg-[#071021] text-[#e6e6e6]">
+  <header class="bg-[#08121a] sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="#" onclick="window.parent.handlePreviewNavigation(\'index.html\'); return false;" class="flex items-center text-[#D4AF37] font-bold">Niyantri</a>
+      <nav class="space-x-4 text-[#F7EED6]"><a href="#" onclick="window.parent.handlePreviewNavigation(\'index.html\'); return false;">Home</a><a href="#" onclick="window.parent.handlePreviewNavigation(\'products.html\'); return false;">Shop</a><a href="#" onclick="window.parent.handlePreviewNavigation(\'about.html\'); return false;">About</a><a href="#" onclick="window.parent.handlePreviewNavigation(\'contact.html\'); return false;">Contact</a><a href="#" onclick="window.parent.handlePreviewNavigation(\'cart.html\'); return false;">Cart</a></nav>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-12">
+    <h1 class="text-3xl text-[#F7EED6]">Shop</h1>
+    <p class="text-sm text-[#cfcfcf] mt-2">Explore our curated selection of coffee and accessories.</p>
+
+    <div class="mt-6 flex gap-4 items-center justify-between">
+      <div class="flex gap-2">
+        <select id="categoryFilter" class="px-3 py-2 bg-[#0b1420] border border-[#1f2a36] rounded text-[#e6e6e6]">
+          <option value="all">All categories</option>
+        </select>
+      </div>
+      <div>
+        <input id="searchInput" placeholder="Search products" class="px-3 py-2 bg-[#0b1420] border border-[#1f2a36] rounded text-[#e6e6e6]" />
+      </div>
+    </div>
+
+    <div id="productsGrid" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </main>
+
+  <footer class="bg-[#06101a] mt-12 py-8 text-center text-sm text-[#9aa3ac]">© Niyantri — Demo store</footer>
+
+  <script src="./products.js"></script>
+  <script>
+    const grid = document.getElementById('productsGrid');
+    const catFilter = document.getElementById('categoryFilter');
+    const search = document.getElementById('searchInput');
+
+    // populate categories
+    const cats = ['all', ...new Set(PRODUCTS.map(p=>p.category))];
+    cats.forEach(c=>{
+      const opt = document.createElement('option'); opt.value=c; opt.textContent=c[0].toUpperCase()+c.slice(1);
+      catFilter.appendChild(opt);
+    });
+
+    function render(list){
+      grid.innerHTML='';
+      list.forEach(p=>{
+        const c = document.createElement('div');
+        c.className='bg-[#071523] rounded-xl p-4';
+        c.innerHTML=`
+          <img src="${p.image}" alt="${p.name}" class="w-full h-44 object-cover rounded-md" />
+          <h3 class="mt-3 text-lg text-[#F7EED6]">${p.name}</h3>
+          <p class="text-sm text-[#cfcfcf]">${p.category} • $${p.price.toFixed(2)}</p>
+          <div class="mt-4 flex items-center justify-between">
+            <a href="./product.html?id=${p.id}" class="text-[#D4AF37]">Details</a>
+            <button class="bg-[#D4AF37] text-[#08101a] px-3 py-1 rounded" onclick="addToCart(${p.id})">Add</button>
+          </div>
+        `;
+        grid.appendChild(c);
+      });
+    }
+
+    render(PRODUCTS);
+
+    catFilter.addEventListener('change', ()=>{
+      const v = catFilter.value;
+      const filtered = (v==='all')?PRODUCTS:PRODUCTS.filter(p=>p.category===v);
+      render(filtered);
+    });
+
+    search.addEventListener('input', ()=>{
+      const q = search.value.trim().toLowerCase();
+      const filtered = PRODUCTS.filter(p=>p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
+      render(filtered);
+    });
+
+    function addToCart(id){
+      const product = PRODUCTS.find(p=>p.id===id);
+      if(!product) return;
+      let cart = JSON.parse(localStorage.getItem('niyantri_cart')||'[]');
+      const found = cart.find(i=>i.id===id);
+      if(found) found.qty++;
+      else cart.push({id:id, qty:1});
+      localStorage.setItem('niyantri_cart', JSON.stringify(cart));
+      alert('Added to cart (demo)');
+    }
+  </script>
+</body>
+</html>
